@@ -4,6 +4,7 @@ import torch.nn as nn
 import time
 
 import torch
+torch.cuda.memory._record_memory_history()
 
 def tensor_size(tensor):
     return (tensor.numel() * torch.finfo(tensor.dtype).bits / 8) / (1024 ** 2)
@@ -55,8 +56,8 @@ def create_transformer_model(num_encoder_layers, d_model, num_heads, dim_feedfor
 model_configs = {
     "linear": [
         (10, 10000),
-        # (20, 10000),
-        # (30, 10000),
+        (20, 10000),
+        (30, 10000),
         # (40, 10000),
         # (50, 10000)
     ],
@@ -117,3 +118,4 @@ for model_type, configs in model_configs.items():
         # Clean up GPU memory
         del model_gpu, inputs_gpu, outputs_gpu
         torch.cuda.empty_cache()
+torch.cuda.memory._dump_snapshot("my_snapshot.pickle")
